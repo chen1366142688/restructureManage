@@ -1,0 +1,577 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #f0f0f0;
+  overflow: hidden;
+}
+.lock-screen-back {
+  border-radius: 50%;
+  z-index: -1;
+  box-shadow: 0 0 0 0 #667aa6 inset;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 3s;
+}
+.no-data{
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content: center;
+  align-items:center;
+  padding-top:40px;
+  font-size:16px;
+}
+.main {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  .unlock-con {
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 11000;
+  }
+  .sidebar-menu-con {
+    background-color: #ffffff;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 21;
+    transition: width 0.3s;
+  }
+  .layout-text {
+    display: inline-block;
+    white-space: nowrap;
+    position: absolute;
+  }
+  .layout-text-size {
+    font-size:14px;
+  }
+  .main-hide-text .layout-text {
+    display: none;
+  }
+  &-content-container {
+    position: relative;
+  }
+  &-header-con {
+    box-sizing: border-box;
+    position: fixed;
+    display: block;
+    padding-left: 200px;
+    width: 100%;
+    height: auto;
+    z-index: 20;
+    box-shadow: 0 2px 1px 1px rgba(100, 100, 100, 0.1);
+    transition: padding 0.3s;
+  }
+  &-breadcrumb {
+    padding: 8px 15px 0;
+  }
+  &-menu-left {
+    background: #464c5b;
+    height: 100%;
+  }
+  .tags-con {
+    height: 40px;
+    z-index: -1;
+    overflow: hidden;
+    background: #f0f0f0;
+    .tags-outer-scroll-con {
+      position: relative;
+      box-sizing: border-box;
+      padding-right: 120px;
+      width: 100%;
+      height: 100%;
+      .tags-inner-scroll-body {
+        position: absolute;
+        padding: 2px 10px;
+        overflow: visible;
+        white-space: nowrap;
+        transition: left 0.3s ease;
+      }
+      .close-all-tag-con {
+        position: absolute;
+        right: 0;
+        top: 0;
+        box-sizing: border-box;
+        padding-top: 8px;
+        text-align: center;
+        width: 110px;
+        height: 100%;
+        background: white;
+        box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+      }
+    }
+  }
+  &-header {
+    height: 80px;
+    background: #fff;
+    box-shadow: 0 2px 1px 1px rgba(100, 100, 100, 0.1);
+    position: relative;
+    z-index: 11;
+    .navicon-con {
+      display: inline-block;
+      line-height: 80px;
+      height:80px;
+      font-size: 15px;
+      font-weight: 600;
+      .ivu-menu-horizontal{
+          height:80px;
+          line-height:80px;
+      }
+    }
+    .header-middle-con {
+      position: absolute;
+      left: 60px;
+      top: 0;
+      right: 340px;
+      bottom: 0;
+      padding: 10px;
+      overflow: hidden;
+    }
+    .header-avator-con {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 320px;
+      .nowTimes {
+        font-size: 16px;
+        color: #00c693;
+        position: absolute;
+        top: 18px;
+        left: 10px;
+        @media screen and (max-width: 1650px) {
+          left: 0px !important;
+        }
+      }
+      
+      .switch-theme-con {
+        display: inline-block;
+        width: 40px;
+        height: 100%;
+      }
+      .message-con {
+        display: inline-block;
+        width: 30px;
+        padding: 18px 0;
+        text-align: center;
+        cursor: pointer;
+        i {
+          vertical-align: middle;
+        }
+      }
+      .change-skin {
+        font-size: 14px;
+        font-weight: 500;
+        padding-right: 5px;
+      }
+      .switch-theme {
+        height: 100%;
+      }
+      .user-dropdown {
+        &-menu-con {
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 150px;
+          height: 100%;
+          .main-user-name {
+            display: inline-block;
+            width: 80px;
+            word-break: keep-all;
+            white-space: nowrap;
+            vertical-align: middle;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: right;
+          }
+        }
+        &-innercon {
+          height: 100%;
+          padding-right: 14px;
+        }
+      }
+      .full-screen-btn-con {
+        display: inline-block;
+        width: 30px;
+        padding: 18px 0;
+        text-align: center;
+        cursor: pointer;
+        i {
+          vertical-align: middle;
+        }
+      }
+      .lock-screen-btn-con {
+        display: inline-block;
+        width: 30px;
+        padding: 18px 0;
+        text-align: center;
+        cursor: pointer;
+        i {
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+  .single-page-con {
+    position: absolute;
+    top: 80px;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    background-color: #f0f0f0;
+    z-index: 1;
+    transition: left 0.3s;
+    .glob-message{
+      position: absolute;
+      right:30px;
+      top:10px;
+      z-index:999;
+      cursor: pointer;
+      .circle{
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        right:0;
+        top:0;
+        background: #CCF1E8;
+        box-shadow: 1px 3px 13px 3px rgba(0, 0, 0, 0.15);
+        border-radius: 50%;
+        font-size:16px;
+        font-weight: bold;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        color:#00C694;
+        z-index:999;
+      }
+      .message-box{
+        position:absolute;
+        right:40px;
+        top:40px;
+        width: 524px;
+        min-height: 180px;
+        background: #F5F7FB;
+        box-shadow: 1px 3px 13px 3px rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+        box-sizing: border-box;
+        padding:20px;
+        padding-bottom:0;
+        display:flex;
+        flex-direction: column;
+        .message-box-title{
+          font-size:16px;
+        }
+        .message-box-content{
+          margin-top:16px;
+          font-size:16px;
+          flex:1;
+          .time{
+            color:#707070;
+          }
+        }
+        .message-box-footer{
+          display: flex;
+          justify-content: space-between;
+          align-items:center;
+          border-top:1px solid #ccc;
+          height:56px;
+
+          .shouqi{
+            width: 80px;
+            height: 30px;
+            background: #00C694;
+            border-radius: 5px;
+            color:#fff;
+            text-align: center;
+            line-height:30px;
+            cursor: pointer;
+            .icon_arrow_top{
+              width:8px;
+              height:8px;
+            }
+          }
+        }
+      }
+    }
+    .single-page {
+      margin: 10px;
+    }
+  }
+  &-copy {
+    text-align: center;
+    padding: 10px 0 20px;
+    color: #9ea7b4;
+  }
+}
+.taglist-moving-animation-move {
+  transition: transform 0.3s;
+}
+.ivu-table-cell {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-all;
+  box-sizing: border-box;
+}
+.logo-con {
+    height: 80px;
+    padding:0 7px;
+    display: flex;
+    align-items: center;
+    // justify-content: space-between;为了演示，改成小马健康
+    justify-content: center;
+    font-family:PingFang SC;
+    font-weight:bold;
+    color:rgba(51,51,51,1);
+    line-height:22px;
+    font-size:20px;//为了演示，增加2像素
+    border-bottom:1px solid #F3ECE4;
+    box-shadow:0px 3px 0px 0px rgba(150,80,9,0.11);
+    .min-logo{
+        width:48px;//为了演示，减去两像素
+        height:48px;//为了演示，减去两像素
+        margin-right:16px;//为了演示
+    }
+    .schoolName-tit{
+        // flex:1;为了演示，改成小马健康
+        text-align: center;
+    }
+}
+.logo-con-more {
+    height: 80px;
+    padding:0 7px;
+    display: flex;
+    align-items: center;
+    // justify-content: space-between;为了演示，改成小马健康
+    justify-content: center;
+    font-family:PingFang SC;
+    font-weight:bold;
+    color:rgba(51,51,51,1);
+    line-height:22px;
+    font-size:20px;//为了演示，增加2像素
+    border-bottom:1px solid #F3ECE4;
+    box-shadow:0px 3px 0px 0px rgba(150,80,9,0.11);
+    .min-logo{
+        width:48px;//为了演示，减去两像素
+        height:48px;//为了演示，减去两像素
+        margin-right:16px;//为了演示
+    }
+    .schoolName-tit{
+        // flex:1;为了演示，改成小马健康
+        text-align: center;
+    }
+}
+.ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active .ivu-menu-submenu-title {
+  color: #00c693 !important;
+}
+.main-header .header-avator-con{
+  width:350px;
+}
+.main-header .header-avator-con .user-dropdown-menu-con{
+  width:180px;
+}
+.main-header .header-avator-con .user-dropdown-menu-con .main-user-name{
+  width:40px;
+}
+@media screen and (max-width: 1650px) {
+  .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item{
+    padding:0 5px !important;
+    font-size: 13px !important;
+  }
+  .main-header .header-avator-con{
+    width:290px;
+  }
+  .main-header .header-avator-con .user-dropdown-menu-con{
+    width:180px;
+  }
+  .main-header .header-avator-con .nowTimes{
+    font-size: 14px;
+    top:16px;
+    }
+    .ivu-menu-item > i{
+        margin-right:0px !important;
+        font-size: 22px !important;
+    }
+}
+@media screen and (max-width: 1441px) {
+    .main-header{
+        height:60px;
+    }
+    .main-header .navicon-con, .main-header .navicon-con .ivu-menu-horizontal {
+        line-height: 60px;
+        height: 60px;
+    }
+  .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item{
+    padding:0 5px !important;
+    font-size: 12px !important;
+  }
+  .ivu-menu-vertical .ivu-menu-item{
+      padding:14px 0px 14px 22px !important;
+  }
+  .main-header-con{
+      // padding-left:200px !important;
+  }
+  .single-page-con{
+    // left:200px !important;
+    top:60px !important;
+    .glob-message{
+      .circle{
+        width: 80px;
+        height: 80px;
+        background: #CCF1E8;
+        box-shadow: 1px 3px 13px 3px rgba(0, 0, 0, 0.15);
+        border-radius: 50%;
+      }
+    }
+  }
+  .logo-con{
+      height:60px;
+      font-size: 16px;
+  }
+  .logo-con .min-logo{
+    width:40px;
+    height:40px;
+}
+.sidebar-menu-con{
+    // width:200px !important;
+}
+.full-screen-btn-con{display: none !important;}
+.ivu-avatar.ivu-avatar-icon{display: none !important;}
+.main-header .header-avator-con .user-dropdown-menu-con{width:78px;}
+.main-header .header-avator-con{width:225px;}
+.main-header .header-avator-con .nowTimes{
+    font-size: 12px;
+    top:11px;
+}
+.ivu-menu-item>i{
+    margin-right: 0px !important;
+    font-size: 18px !important;
+}
+
+}
+
+
+
+.demo-spin-icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+}
+/** all 所有页面的顶部筛选模块样式 */
+.top-search{
+  display:flex;
+  justify-content: space-between;
+  // 左边输入框
+  .left-input{
+    width:62%;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-start;
+    .item{
+      margin:5px 20px;
+    }
+  }
+  // 右边的操作按钮
+  .right-btns{
+    text-align:left;
+    width:38%;
+    Button{
+      margin:5px;
+    }
+  }
+  
+}
+.ivu-menu-horizontal .ivu-menu-item{padding:0 13px !important;}
+
+//重新登录相关样式
+.formData{
+  display: flex;
+  justify-content: space-between;
+  .login-item{
+    width:340px;
+    display: flex;
+    justify-content: flex-start;
+    border-bottom:1px solid #D0D0D0;
+    margin-bottom:20px;
+    .ivu-form-item-content{
+      display: flex;
+      justify-content: flex-start;
+      img{
+        height:30px;
+        margin-right:14px;
+      }
+      .code-img{
+        width:128px;
+        height:37px;
+        position: relative;
+        bottom:10px;
+        cursor: pointer;
+      }
+      .reload{
+        width:22px;
+        height:20px;
+        cursor: pointer;
+      }
+      .login-code{
+        display: inline-block;
+        border: none;
+        .ivu-input:focus{
+          outline: none;
+          box-shadow: none;
+        }&:hover{
+          border-color:#FFF;
+        }
+      }
+    }
+    .login-name{
+      display: inline-block;
+      border: none;
+      width:300px;
+      padding-bottom: 5px;
+      .ivu-input:focus{
+        outline: none;
+        box-shadow: none;
+      }
+      &:hover{
+        border-color:#FFF;
+      }
+      .ivu-input{
+        height:30px;
+        border:none;
+        font-size:16px;
+        &:focus{
+          outline: none;
+          border:none;
+        }
+      }
+    }
+  }
+  .login-names{
+    width:140px;
+    border: none;
+    .ivu-input:focus{
+      outline: none;
+      box-shadow: none;
+    }
+    &:hover{
+      border-color:#FFF;
+    }
+    .ivu-input{
+      border:none;
+      font-size:16px;
+      &:focus{
+        outline: none;
+        border:none;
+      }
+    }
+  }
+}
