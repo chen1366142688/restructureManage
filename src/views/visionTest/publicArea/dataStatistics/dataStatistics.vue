@@ -120,7 +120,7 @@ import allGender from '@/libs/gender.js'
 import mixins from './dataStatisticsTable'
 import Util from '@/libs/util.js'
 import api from '@/api/visionTest/studentVisionManage/visionManage'
-
+import { mapActions } from 'vuex'
 export default {
     name: "app",
     mixins: [ mixins ],
@@ -151,6 +151,7 @@ export default {
         }
     },
     methods: {
+      ...mapActions(['setListPageparms']),
         //去详情页编辑
         goStudentVisionDetail(studentId){
             this.$router.push({name:'studentVisionDetail',query:{studentId:studentId}})
@@ -171,7 +172,8 @@ export default {
                 orderField:this.searchInfo.orderField,
                 orderSort:this.searchInfo.orderSort,
             }
-            this.$store.dispatch('pageParams/saveListPagePars',{name: this.$route.name, pars: params});
+            // this.$store.dispatch('pageParams/saveListPagePars',{name: this.$route.name, pars: params});
+            this.setListPageparms({name: this.$route.name, pars: params})
             this.queryVisionList(params) 
             this.queryVisionDataCount(params) 
         },
@@ -238,7 +240,7 @@ export default {
     },
     created() {
         //回显缓存筛选条件
-        let params = Util.hasParams(this.$store, this.$route);
+        let params = Util.hasParams(this.$route);
         if (params) {
             this.searchInfo.grade =  params.grade ? Number(params.grade) : '9999'
             this.searchInfo.studentClass = params.studentClass ? Number(params.studentClass) : '9999'

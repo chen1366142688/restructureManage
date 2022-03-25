@@ -7,12 +7,12 @@
     width="auto"
     @on-select="changeMenu"
   >
-    <Submenu v-for="(child, childIndex) in menuList" :name="child.name">
+    <Submenu v-for="(child, childIndex) in menuList" :key="childIndex" :name="child.name">
         <template slot="title">
             <Icon :type="child.icon" size="20"/>
             {{child.title}}
         </template>
-        <MenuItem v-for="(childrenNode,childrenNodeIndex) in child.children" :name="childrenNode.name">{{childrenNode.title}}</MenuItem>
+        <MenuItem v-for="(childrenNode,childrenNodeIndex) in child.children" :key="childrenNodeIndex" :name="childrenNode.name">{{childrenNode.title}}</MenuItem>
     </Submenu>
   </Menu>
 </template>

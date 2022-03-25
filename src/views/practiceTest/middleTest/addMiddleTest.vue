@@ -3,66 +3,7 @@
     <div>
         <h2 style="margin-top:15px;margin-bottom:13px;">{{titleName}}中考模拟</h2>
     </div>
-    <!-- <div>
-      <Card>
-        <div class="project-name">
-          <span>名称：</span>
-          <Input v-model="registerCode" @on-change='changeInput' placeholder="请输入自定义项目名称" :maxlength="50" style="width:200px;"/>
-        </div>
-      </Card>
-    </div> -->
     <test-classset v-if="haveData" @changeGrade='changeGrade' :activityType="activityType" :changeGradeList="changeGradeList"></test-classset>
-    <!-- <div class="test-set">
-      <Card>
-        <div>
-          <div style="margin-bottom: 16px; font-size: 18px">测试班级设置</div>
-          <div class="set-content">
-            <div class="set-items" v-for="(item,index) in changeGradeList" :key="index">
-              <div class="set-item">
-                <div class="item-name">
-                  {{item.gradeName}}—统一测试项目
-                </div>
-                <div class="item-content" >
-                  <div class="all-project" v-for="(unifyChild,unifyIndex) in item.projectList.unify" :key="unifyIndex">
-                    <div class="item-project">
-                      <div class="project-nameTitle">{{unifyChild.classTestName}}</div>
-                      <div class="project-type"><div>{{unifyChild.itemName}}</div></div>
-                    </div>
-                  </div>
-                  <div v-if="!item.projectList.unify.length" class="no-data">
-                    请配置项目
-                  </div>
-                </div>
-                <div class="item-footer">
-                  <span>项目总数：{{item.projectList.unify.length}}</span>
-                  <div class="item-btn" @click="configuration(item.gradeId,'1')">配置</div>
-                </div>
-              </div>
-              <div class="set-item">
-                <div class="item-name">
-                  {{item.gradeName}}—学生自选项目
-                </div>
-                <div class="item-content" >
-                  <div class="all-project" v-for="(optionalChild,optionalIndex) in item.projectList.optional" :key="optionalIndex">
-                    <div class="item-project">
-                      <div class="project-nameTitle">{{optionalChild.classTestName}}</div>
-                      <div class="project-type"><div>{{optionalChild.itemName}}</div></div>
-                    </div>
-                  </div>
-                  <div v-if="!item.projectList.optional.length" class="no-data">
-                    请配置项目
-                  </div>
-                </div>
-                <div class="item-footer">
-                  <span>项目总数：{{item.projectList.optional.length}}</span>
-                  <div class="item-btn" @click="configuration(item.gradeId,'2')">配置</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
-    </div> -->
     <div class="footer-btn">
       <Button type="success" style="margin-right:25px" @click="save">保存</Button>
       <Button type="success" @click="cancel">取消</Button>
@@ -324,12 +265,6 @@ export default {
           min-height:274px;
           overflow-x:hidden;
           overflow-y:auto;
-          .no-data{
-              width:100%;
-              min-height:274px;
-              text-align: center;
-              // line-height:274px;
-            }
             .all-project{
               width:100%;
               // min-height:274px;

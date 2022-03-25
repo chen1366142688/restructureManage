@@ -5,6 +5,8 @@ export const user = state => state.user
 
 export const active = state => state.active
 
+export const loginAgain = state => state.loginAgain
+
 export const shakingedRouter = state => { 
   return catgoryTopMenu(state.shakingedRouter)
 }
@@ -136,8 +138,8 @@ export const sideBarList = (state, getter) => {
   //路由定制化配置，后期再接入
   // const sideBar = deepGetSideBar(permissionStageConfig, sideBarLevel)
   if (permissionStageConfig.length <= 0) {
-    Vue.prototype.$Message.info('未找到可用的权限菜单，请检查权限配置')
-    throw Error('未找到可用的权限菜单，请检查权限配置')
+    // Vue.prototype.$Message.info('未找到可用的权限菜单，请检查权限配置')
+    throw new Error('未找到可用的权限菜单，请检查权限配置')
   }
   return sideBar
 }

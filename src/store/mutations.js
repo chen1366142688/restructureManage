@@ -13,9 +13,23 @@ export default {
   [types.SET_USER_PERMISSIONS](state, permissions) {
     state.permissions = permissions
   },
+
   [types.SET_HISTORY_ACTIVE](state, active) {
     state.active = active
   },
+
+  [types.SAVE_LIST_PAGE_PARS](state, params) {
+    state.listPagePars.set(params.name,params.pars);
+  },
+
+  [types.REMOVE_LIST_PAGE_PARS](state, params) {
+    state.listPagePars.set(params.name,params.pars);
+  },
+
+  [types.SET_EXPORT_BTN](state, paylod) {
+    state.isShowExportBtn = paylod
+  },
+
   [types.SET_TOP_MENU](state) {
     const permissionStageConfig = state => {
       const { routers, permissions } = state // eslint-disable-line
@@ -54,8 +68,8 @@ export default {
     const sideBarList = (state) => {
       const sideBar = permissionStageConfig(state)
       if (sideBar.length <= 0) {
-        Vue.prototype.$Message.info('未找到可用的权限菜单，请检查权限配置')
-        throw Error('未找到可用的权限菜单，请检查权限配置')
+        // Vue.prototype.$Message.info('未找到可用的权限菜单，请检查权限配置')
+        throw new Error('未找到可用的权限菜单，请检查权限配置')
       }
       const [first] = sideBar
       const { name, children, parentCode} = first

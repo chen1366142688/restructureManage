@@ -2,7 +2,7 @@ import Config from '@/config'
 import md5 from "js-md5"
 import _axios, { post, get } from '@/plugins/axios'
 import Util from '@/libs/util'
-import { saveTokens, saveAccessToken} from '../libs/token'
+import { saveTokens, saveAccessToken, getToken} from '../libs/token'
 import { saveUserInfo } from '../libs/userInfo'
 // import store from '@/store'
 
@@ -96,7 +96,35 @@ export default class User {
     saveUserInfo(res.data.response);
     return res.data.response;
   }
+  
+  /**
+   * 获取用户绑定学校列表
+   */
 
+  static async querySchoolList() { 
+    const TOKEN = getToken('token');
+    const res = await get(`/v1/auth/query/login/school/list?token=${TOKEN}`)
+    return res.data.response;
+  }
+
+  /**
+   * 消息已读反馈
+   * @param {string} noticeId 消息ID
+   */
+
+  static async teacherReadMessage(noticeId) { 
+    const res = await get(`/v1/education/teacherReadMessage?noticeId=${noticeId}`)
+    return res.data.response;
+  }
+
+  /**
+   * 获取消息列表
+   */
+
+  static async getMessageList() { 
+    const res = await get('/v1/education/queryEducationInfoList')
+    return res.data.response;
+  }
   /**
    * 获取当前用户信息和所拥有的权限
    */

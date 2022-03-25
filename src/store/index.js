@@ -5,6 +5,7 @@ import state from './state'
 import mutations from './mutations'
 import * as getters from './getters'
 import actions from './actions'
+import pageParams from './modules/params';
 
 Vue.use(Vuex)
 
@@ -27,5 +28,8 @@ export default new Vuex.Store({
   getters,
   mutations,
   actions,
+  modules: {
+    pageParams
+  },
   plugins: [vuexLocal.plugin],
 })

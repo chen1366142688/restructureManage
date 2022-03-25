@@ -9,5 +9,7 @@ export default {
   user: {}, //当前用户
   permissions: [], // 每个用户的所有权限
   routers,
-  shakingedRouter:[]
+  shakingedRouter: [],
+  isShowExportBtn: false, // 是否显示数据档案-历史数据-上报学生导入、按学生生成的按钮
+  listPagePars: new Map() //存储每个路由对应的搜索条件进行筛选项的回显
 }

@@ -18,7 +18,17 @@ export default {
   setLoginStatus({ commit }, status) {
     commit(types.SET_LOGIN_STATUS, status)
   },
+  setListPageparms({ commit }, params) {
+    commit(types.SAVE_LIST_PAGE_PARS, params)
+  },
+  removeListPageparms({ commit }, params) {
+    commit(types.REMOVE_LIST_PAGE_PARS, params)
+  },
+  setExportBtn({ commit }, paylod) {
+    commit(types.SET_EXPORT_BTN, paylod)
+  },
   loginOut({ commit }) { 
+    sessionStorage.clear();
     removeToken()
     removeUserInfo()
     router.push({

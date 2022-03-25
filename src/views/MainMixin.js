@@ -60,7 +60,7 @@ const mixins = {
               let { response } = res.data;
               sessionStorage.setItem("token", response.oAuthTokenVO.token);
               this.loginStep = false;
-              this.$store.commit('setLoginStatus', false);
+              this.setLoginStatus(false)
             }else{
               this.$Message.info(res.data.msg);
             }
@@ -74,7 +74,7 @@ const mixins = {
       this.againParams.codeSource = `${this.$axios.defaults.baseURL}/v1/auth/login/getCheckCode?userCode=${this.againParams.userCode}`;
     },
     cancelLogin(){
-      this.$store.commit('setLoginStatus', false);
+      this.setLoginStatus(false)
       this.loginStep = false;
       this.$router.push({ name: 'login' });
     },

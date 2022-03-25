@@ -2,7 +2,6 @@ import Vue from 'vue';
 import iView from 'iview';
 import store from './store';
 import { router } from './router/index';
-
 import App from './app.vue';
 import echarts from 'echarts';
 import 'iview/dist/styles/iview.css';

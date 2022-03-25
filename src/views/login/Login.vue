@@ -109,6 +109,7 @@ import welcome from '@/assets/img/login/welcome.png'
 import guangzhou from '@/assets/img/login/guangzhou.png'
 import User from '@/models/user'
 import Mixins from './login'
+import { setStorage } from '@/libs/token'
 import { mapActions, mapMutations } from 'vuex'
 import Config from '@/config'
 export default {
@@ -128,7 +129,6 @@ export default {
       countdown: 60,
       codeTxt: "发送验证码",
       schoolType: 2,
-      login: true,
       registerForm: {
         userName: "",
         password: "",
@@ -140,7 +140,6 @@ export default {
       },
       codeUrl: "",
       userCode: "",
-      
     };
   },
   methods: {
@@ -176,6 +175,7 @@ export default {
           }
         }
         const userInfo = await User.registerOrForgetPassWord(params, formType)
+        setStorage(userInfo)
         this.setUserAndState(userInfo)
         this.setUserPermissions(userInfo.menuList)
         this.setShakingedRouter()
@@ -208,6 +208,7 @@ export default {
           schoolId: loginSchoolId
         }
         const userInfo = await User.loginSchoolByOrgantoken(params)
+        setStorage(userInfo)
         this.setUserAndState(userInfo)
         this.setUserPermissions(userInfo.menuList)
         this.setShakingedRouter()
@@ -302,7 +303,7 @@ export default {
   mounted() {
     this.directLogin();//是否是教育局到系统直接登录的
     this.isGuangZhou();//广州域名需要更换企业信息
-    this.changeCode();
+    this.changeCode();//获取动态验证码
   },
 };
 </script>

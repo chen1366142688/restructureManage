@@ -4,33 +4,27 @@
 
 <template>
   <div class="main" :class="{ 'main-hide-text': shrink }">
-    <div
-      class="sidebar-menu-con"
-      :style="{
-        width: shrink ? '90px' : '250px',
-        overflow: shrink ? 'visible' : 'auto',
-      }"
-    >
+    <div class="sidebar-menu-con" :style="{ width: shrink ? '90px' : '250px'}">
       <shrinkable-menu
         ref="shrinkable"
         :shrink="shrink"
         :menu-list="sideLeftBarList"
         :open-names="openNames"
-      >
+        >
         <div
           slot="top"
-          :class="schoolName.length < 10 ? 'logo-con' : 'logo-con-more'"
-          style="background-color: white"
-        >
-          <img src="../images/schoolLogo.png" class="min-logo" />
-          <div class="schoolName-tit" v-if="!shrink">{{ schoolName }}</div>
+          :class="user.schoolName.length < 10 ? 'logo-con' : 'logo-con-more'"
+          style="background-color: #fff"
+          >
+          <img src="../assets/img/main/schoolLogo.png" class="min-logo" />
+          <div class="schoolName-tit" v-if="!shrink">{{ user.schoolName }}</div>
         </div>
       </shrinkable-menu>
     </div>
     <div
       class="main-header-con"
       :style="{ paddingLeft: shrink ? '90px' : '250px' }"
-    >
+      >
       <div class="main-header">
         <div class="navicon-con">
           <topMenu
@@ -43,19 +37,8 @@
         <div class="header-avator-con">
           <div class="nowTimes">
             <p>
-              <strong>
-                {{
-                  semesterStatus == 1
-                    ? "第一学期"
-                    : semesterStatus == 2
-                    ? "寒假"
-                    : semesterStatus == 3
-                    ? "第二学期"
-                    : "暑假"
-                }}
-                <span v-if="semesterStatus == 1 || semesterStatus == 3"
-                  >第{{ weekCount }}周 星期{{ weekDay }}</span
-                >
+              <strong>{{learningStage(user.semesterStatus)}}
+                <span v-if="user.semesterStatus == 1 || user.semesterStatus == 3">第{{ user.weekCount }}周 星期{{ weekDay }}</span>
               </strong>
             </p>
             <p>{{ nowTime }}</p>
@@ -73,18 +56,18 @@
                 @on-click="handleClickUserDropdown"
               >
                 <a href="javascript:void(0)">
-                  <span class="main-user-name">{{ userName }}</span>
+                  <span class="main-user-name">{{ user.name }}</span>
                   <Icon type="md-arrow-dropdown" />
                 </a>
                 <DropdownMenu slot="list">
                   <DropdownItem
-                    v-if="loginSchoolList && loginSchoolList.length > 1"
+                    v-if="loginSchoolList.length > 1"
                     :name="item.relationSchoolId"
                     v-for="(item, index) in loginSchoolList"
                     :key="index"
                     divided
                     style="margin-top: 0px"
-                    :selected="schoolName === item.relationSchoolName"
+                    :selected="user.schoolName === item.relationSchoolName"
                     >{{ item.relationSchoolName }}</DropdownItem
                   >
                   <DropdownItem name="loginout" divided style="margin-top: 0px"
@@ -92,7 +75,6 @@
                   >
                 </DropdownMenu>
               </Dropdown>
-              <!-- <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/> -->
               <Avatar
                 :src="avatarUrl"
                 icon="person"
@@ -226,8 +208,8 @@ import shrinkableMenu from "./main-components/shrinkable-menu/shrinkable-menu.vu
 import topMenu from "./main-components/shrinkable-menu/components/topMenu.vue";
 import Fullscreen from "../components/main/fullscreen";
 import Mixins from './MainMixin.js';
-import { getToken } from '@/libs/token'
-import { mapGetters, mapActions } from 'vuex'
+import { getToken, setStorage } from '@/libs/token'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import User from '@/models/user'
 export default {
   mixins: [ Mixins ],
@@ -238,10 +220,7 @@ export default {
   },
   data() {
     return {
-      schoolLogo: "../images/index_timo.png",
-      schoolName: "",
       shrink: false,
-      userName: "",
       phoneNo: "",
       operationCode: "",
       avatarUrl: "",
@@ -260,20 +239,21 @@ export default {
       menuLeftList: [],
       status: false,
       clientWidth: '',
+      oneWeekStr: '日一二三四五六'
     };
   },
   computed: {
+    ...mapGetters(['shakingedRouter', 'sideLeftBarList', 'active', 'user']),
     loginAgain(){
       let loginAgainStatus = this.$store.state.loginAgain
       if(loginAgainStatus){
-        this.againParams.userPhone = sessionStorage.getItem('phoneNo')
+        this.againParams.userPhone = this.user.phoneNum
         this.againParams.againPassword = ''
         this.againParams.code = ''
         this.changeCode()
       }
       return loginAgainStatus;
     },
-    ...mapGetters(['shakingedRouter', 'sideLeftBarList', 'active']),
   },
   watch: {
     // 监听屏幕宽度，如果小于等于1440显示收缩菜单，否则显示展开菜单
@@ -292,72 +272,17 @@ export default {
     /**
      * 在挂载阶段监听浏览器尺寸，动态获取屏幕宽度
      */
-    const vm = this
+    const that = this
     this.clientWidth = document.body.clientWidth
     window.onresize = () => {
       return (() => {
-        vm.clientWidth = document.body.clientWidth
+        that.clientWidth = document.body.clientWidth
       })();
     };
   },
   methods: {
-    ...mapActions(['setHistoryActive','loginOut']),
-    fatherMethod() {
-      this.$refs.mainBox.scrollTop = this.$refs.signglePage.offsetHeight;
-    },
-    getMessageList() {
-      this.$axios.get("/v1/education/queryEducationInfoList").then((res) => {
-        if (res.data.code === 10000) {
-          let result = res.data.response;
-          if (result && result.length > 0) {
-            for (let i = 0; i < result.length; i++) {
-              let item = result[i];
-              item.endTime = item.endTime.split(".")[0];
-            }
-            let lastNoticeId = Number(sessionStorage.getItem("lastNoticeId"));
-            if (lastNoticeId) {
-              // 从缓存中取出noticeId
-              if (result[result.length - 1].noticeId > lastNoticeId) {
-                // 如果最新的noticeId大于缓存中的noticeId则说明有消息
-                this.showMessageBox = true;
-              }
-            }
-            sessionStorage.setItem(
-              "lastNoticeId",
-              result[result.length - 1].noticeId
-            );
-            this.messageList = result;
-            this.pageTotal = res.data.response.length;
-            if (sessionStorage.getItem("showMessageBox")) {
-              // 如果检测到是第一次登陆进来显示消息
-              this.showMessageBox = true;
-            }
-          }else{
-            this.showMessageBox = false;
-            sessionStorage.removeItem("showMessageBox");
-          }
-        }
-      });
-    },
-    changeMessage(e) {
-      this.pageIndex = e - 1;
-    },
-    cancelMessageBox() {
-      this.showMessageBox = false;
-      sessionStorage.removeItem("showMessageBox");
-    },
-    readMessage(){
-      let vm = this
-      this.$axios
-              .get("/v1/education/teacherReadMessage?noticeId=" + vm.messageList[vm.pageIndex].noticeId)
-              .then(function (res) {
-                vm.getMessageList()
-                }
-              )
-    },
-    clickShowMessage() {
-      this.showMessageBox = true;
-    },
+    ...mapActions(['setHistoryActive','loginOut','setUserAndState','setShakingedRouter','setLoginStatus']),
+    ...mapMutations({setUserPermissions: 'SET_USER_PERMISSIONS'}),
     handleClick(name) {//展开
       this.openNames = [name];
     },
@@ -367,13 +292,31 @@ export default {
       this.setHistoryActive(activeData)
       this.$refs.shrinkable.handleChange(name);
     },
+    //以下为消息通知相关函数
+    fatherMethod() {
+      this.$refs.mainBox.scrollTop = this.$refs.signglePage.offsetHeight;
+    },
+    changeMessage(e) {
+      this.pageIndex = e - 1;
+    },
+    cancelMessageBox() {
+      this.showMessageBox = false;
+      sessionStorage.removeItem("showMessageBox");
+    },
+    clickShowMessage() {
+      this.showMessageBox = true;
+    },
+    /**
+     * @param {string} name 当前选中教师名称
+    */
     handleClickUserDropdown(name) {
-      if (name != "loginout") {
+      if(name === "loginout"){
+        this.loginOut()
+      }else{
         this.status = true;
-        const activeSchoolId = sessionStorage.getItem("schoolId");
-        if (activeSchoolId == name) {
+        if(name == this.user.schoolId){
           return false;
-        } else {
+        }else{
           this.$Spin.show({
             render: (h) => {
               return h("div", [
@@ -388,72 +331,24 @@ export default {
               ]);
             },
           });
-
-          const token = sessionStorage.getItem("token");
-          sessionStorage.clear();
-          sessionStorage.setItem("token", token);
           this.upDateToken(name);
         }
-      }else{
-        sessionStorage.clear();
-        this.$router.push({
-            name: "login",
-        });
       }
     },
-    showTime() {
-      var myDate = new Date();
-      this.nowTime =
-        myDate.getFullYear() +
-        "-" +
-        (myDate.getMonth() + 1 < 10
-          ? "0" + (myDate.getMonth() + 1)
-          : myDate.getMonth() + 1) +
-        "-" +
-        (myDate.getDate() < 10 ? "0" + myDate.getDate() : myDate.getDate()) +
-        " " +
-        (myDate.getHours() < 10 ? "0" + myDate.getHours() : myDate.getHours()) +
-        ":" +
-        (myDate.getMinutes() < 10
-          ? "0" + myDate.getMinutes()
-          : myDate.getMinutes()) +
-        ":" +
-        (myDate.getSeconds() < 10
-          ? "0" + myDate.getSeconds()
-          : myDate.getSeconds());
-      setTimeout(() => {
-        this.showTime();
-      }, 1000);
+    timeCounter() {
+      let nowDate = new Date();
+      let fullYear = nowDate.getFullYear();
+      let month = nowDate.getMonth() +1 ;
+      let date = nowDate.getDate();
+      let hour = nowDate.getHours();
+      let minutes = nowDate.getMinutes();
+      let seconds = nowDate.getSeconds();
+      this.nowTime = `${fullYear}-${month < 10 ? ('0'+ month) : month}-${date < 10 ? ('0' + date) : date}:${hour < 10 ? ('0' + hour) : hour}:${minutes < 10 ? ('0' + minutes) : minutes}:${seconds < 10 ? ('0' + seconds) : seconds}`
+      setTimeout(() => {this.timeCounter()}, 1000);
     },
-    
-    queryLoginSchoolList() {
-      let this_ = this;
-      let token = sessionStorage.getItem("token");
-      this_.$axios.defaults.headers.common["token"] = token;
-      if (token != null && token != "") {
-        this.$axios
-          .get("/v1/auth/query/login/school/list?token=" + token)
-          .then(function (res) {
-            if (res.data.code == 10000) {
-              this_.loginSchoolList = [];
-              for (let i = 0; i < res.data.response.length; i++) {
-                if (
-                  res.data.response[i].relationSchoolId !=
-                  sessionStorage.getItem("schoolId")
-                ) {
-                  this_.loginSchoolList.push(res.data.response[i]);
-                } else {
-                  this_.loginSchoolList.push(res.data.response[i]);
-                }
-              }
-            }
-          })
-          .catch(function (error) {});
-      } else {
-      }
+    learningStage(status){
+      return status === '1' ? "第一学期" : status === '2' ? "寒假" : status === '3' ? "第二学期" : "暑假";
     },
-
-
     async upDateToken(schoolId){
       try { 
         let params = {
@@ -462,6 +357,11 @@ export default {
           schoolType: '2'
         }
         const userInfo = await User.upDateToken(params)
+        if (this.status) {//切换学校
+          this.status = false
+          this.$Spin.hide();
+        }
+        setStorage(userInfo)
         this.setUserAndState(userInfo)
         this.setUserPermissions(userInfo.menuList)
         this.setShakingedRouter()
@@ -488,7 +388,53 @@ export default {
         console.log(e)
       }
     },
-
+    async queryLoginSchoolList() {
+      try {
+        const schoolList = await User.querySchoolList()
+        this.loginSchoolList = schoolList
+      } catch(err){
+        console.log(err)
+      }
+    },
+    async getMessageList() {
+      const MessageList = await User.getMessageList()
+      if (MessageList && MessageList.length > 0) {
+        for (let i = 0; i < MessageList.length; i++) {
+          let item = MessageList[i];
+          item.endTime = item.endTime.split(".")[0];
+        }
+        let lastNoticeId = Number(sessionStorage.getItem("lastNoticeId"));
+        if (lastNoticeId) {
+          // 从缓存中取出noticeId
+          if (MessageList[MessageList.length - 1].noticeId > lastNoticeId) {
+            // 如果最新的noticeId大于缓存中的noticeId则说明有消息
+            this.showMessageBox = true;
+          }
+        }
+        sessionStorage.setItem(
+          "lastNoticeId",
+          MessageList[MessageList.length - 1].noticeId
+        );
+        this.messageList = MessageList;
+        this.pageTotal = MessageList.length;
+        if (sessionStorage.getItem("showMessageBox")) {
+          // 如果检测到是第一次登陆进来显示消息
+          this.showMessageBox = true;
+        }
+      }else{
+        this.showMessageBox = false;
+        sessionStorage.removeItem("showMessageBox");
+      }
+    },
+    async readMessage(){
+      try {
+        const {messageList, pageIndex} = this
+        await User.teacherReadMessage(messageList[pageIndex].noticeId)
+        this.getMessageList()
+      } catch (err){
+        console.log(err)
+      }
+    },
   },
   created() {
     if(Object.prototype.toString.call(getToken('token')) === '[object Null]'){
@@ -496,19 +442,14 @@ export default {
     }else{
       this.openNames = [this.active.parentName]
       this.upDateToken(0)
-      // this.getMessageList();
+      this.getMessageList();
     }
   },
   mounted() {
-    
-    // this.$parent.getSchoolWasNotice();
-    // this.$store.commit("updateMenulist");
-    // this.schoolLogo = sessionStorage.getItem("schoolLogo");
-    // this.weekCount = sessionStorage.getItem("weekCount"); // 当前周数
-    // this.semesterStatus = sessionStorage.getItem("semesterStatus"); // 当前学期
-    // this.weekDay = "日一二三四五六".charAt(new Date().getDay());
-    // this.showTime();
-    // this.queryLoginSchoolList();
+    this.weekDay = this.oneWeekStr.charAt(new Date().getDay());
+    this.timeCounter();
+    this.$parent.getSchoolWasNotice();
+    this.queryLoginSchoolList();
   },
 };
 </script>

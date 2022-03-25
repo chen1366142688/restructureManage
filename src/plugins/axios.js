@@ -103,7 +103,7 @@ _axios.interceptors.request.use(
     paramStr = md5(encodeURIComponent(paramStr)).toUpperCase();
     paramStr = `${paramStr}encodeutf8`;
     
-    // console.log('请求信息',reqConfig)
+    console.log('请求信息',reqConfig)
     reqConfig.headers['sign'] = paramStr;
     reqConfig.headers['appKey'] = appKey;
     reqConfig.headers['token'] = getToken('token') || '';
